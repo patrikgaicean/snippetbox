@@ -1,6 +1,7 @@
 package main
 
 import (
+	"example/snippetbox/pkg/forms"
 	"example/snippetbox/pkg/models"
 	"html/template"
 	"path/filepath"
@@ -8,13 +9,21 @@ import (
 )
 
 type templateData struct {
-	CurrentYear int
-	Snippet     *models.Snippet
-	Snippets    []*models.Snippet
+	AuthenticatedUser *models.User
+	CSRFToken         string
+	CurrentYear       int
+	Flash             string
+	Form              *forms.Form
+	Snippet           *models.Snippet
+	Snippets          []*models.Snippet
 }
 
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2006 at 15:04")
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
 var functions = template.FuncMap{
